@@ -8,7 +8,7 @@ import java.io.FileWriter;
 
 public class Polynomial {
 	//fields
-	double [] coefficients;
+    double [] coefficients;
     int [] exp;
 	
     //methods
