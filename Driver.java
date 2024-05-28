@@ -1,3 +1,13 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
+
+
+
 public class Driver {
     public static void main(String [] args) {
         Polynomial p = new Polynomial();
@@ -28,7 +38,60 @@ public class Driver {
         else
             System.out.println("0 is not a root of result"); 
 
-        
+
+
+        try {
+            
+            File tempFile = File.createTempFile("tempfile", ".txt");
+            String polynomial = "1+6x+5x2-2x3-9x4";
+            Files.write(Paths.get(tempFile.getPath()), polynomial.getBytes());
+            
+            
+           
+            Polynomial pold = new Polynomial(tempFile);
+
+            for (double coeff : pold.coefficients) {
+                System.out.println(coeff);
+            }
+            for (int exp : pold.exp) {
+                System.out.println(exp);
+            }
+    
+            
+            
+            double[] expectedCoefficients = {1.0, 6.0, 5.0, -2.0, -9.0};
+            int[] expectedExponents = {0, 1, 2, 3, 4};
+
+
+            // Delete temporary file
+            tempFile.delete();
+        } catch (IOException e) {
+            System.out.println("IOException occurred: " + e.getMessage());
+
+        }
+
+        double[] coefficients = {6, 5, -2, -9};
+        int[] exponents = {1, 2, 3, 4};
+        Polynomial pnew = new Polynomial(coefficients, exponents);
+
+       
+        String fileName = "test_polynomial.txt";
+        pnew.saveToFile(fileName);
+
+       
+        try {
+            String content = Files.readString(Paths.get(fileName));
+            String expectedContent = "6x+5x2-2x3-9x4";
+
+            
+            System.out.println(content);
+            
+           
+            Files.deleteIfExists(Paths.get(fileName));
+        } catch (IOException e) {
+            System.out.println("IOException occurred: " + e.getMessage());
+
+        }
         
     }
 

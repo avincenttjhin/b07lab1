@@ -33,6 +33,7 @@ public class Polynomial {
                 String[] coeffs = line.split("(?=[+-])"); // Split by + or -
                 coefficients = new double[coeffs.length];
                 exp = new int[coeffs.length];
+                int counter = 0;
     
                 for (int i = 0; i < coeffs.length; i++) {
 
@@ -42,9 +43,12 @@ public class Polynomial {
                     String coeff = coeffs[i];
                     String[] each = coeff.split("x");
 
-                    if (each.length == 1) {
+                    if (each.length == 1 && counter == 0) {
                         expo = 0;
-                    } else {
+                        counter = 1;
+                    } else if (each.length == 1 && counter == 1) {
+                        expo = 1;
+                    } else { 
                         expo = Integer.parseInt(each[1]);
                     }
     
@@ -169,8 +173,23 @@ public class Polynomial {
        try (FileWriter writer = new FileWriter(fname)) {
       
             if (coefficients.length != 0) {
-                    writer.write(Double.toString(coefficients[0]));
-            }
+                    if (coefficients[0] != 1 || exp[0] == 0) {
+                        if (coefficients[0] % 1 == 0) {
+                            int intCoeff = (int) coefficients[0];
+                            writer.write(Integer.toString(intCoeff));
+                        } else {
+                            writer.write(Double.toString(coefficients[0]));
+                        }
+                    }
+    
+                    if (exp[0] != 0) {
+                        writer.write("x");
+                        if (exp[0] != 1) {
+                            writer.write(Integer.toString(exp[0]));
+                        }
+                    }
+                }
+                    
 
             for (int i = 1; i < coefficients.length; i++) {
                 if (coefficients[i] > 0) {
@@ -181,7 +200,12 @@ public class Polynomial {
 
                 double coeff = Math.abs(coefficients[i]);
                 if (coeff != 1 || exp[i] == 0) {
-                    writer.write(Double.toString(coeff));
+                    if (coeff % 1 == 0) {
+                        int intCoeff = (int) coeff;
+                        writer.write(Integer.toString(intCoeff));
+                    } else {
+                        writer.write(Double.toString(coeff));
+                    }
                 }
 
                 if (exp[i] != 0) {
